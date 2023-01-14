@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sdk.dicegame.presentation.home.GameScreen
+import com.sdk.dicegame.presentation.game.GameScreen
 import com.sdk.dicegame.presentation.intro_page.IntroScreen
 import com.sdk.dicegame.presentation.intro_page.SplashScreen
 import com.sdk.dicegame.presentation.screen.Screen

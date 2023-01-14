@@ -1,4 +1,4 @@
-package com.sdk.dicegame.presentation.home
+package com.sdk.dicegame.presentation.game
 
 import com.sdk.dicegame.R
 
@@ -8,8 +8,6 @@ data class GameState(
     var currentScore: Int = 0,
     var im1: Int = R.drawable.dice1,
     var im2: Int = R.drawable.dice1,
-    val isGameFinished: Boolean = false,
     var isButton1Enabled: Boolean = true,
-    var isButton2Enabled: Boolean = false,
-    var rotation: Float = 306f
+    var isButton2Enabled: Boolean = false
 )
