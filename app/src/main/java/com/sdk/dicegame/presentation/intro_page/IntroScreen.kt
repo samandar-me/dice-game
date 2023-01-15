@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sdk.dicegame.MainActivity
 import com.sdk.dicegame.R
+import com.sdk.dicegame.component.BlurImage
 import com.sdk.dicegame.component.GradientButton
 import com.sdk.dicegame.presentation.screen.Screen
 
@@ -21,14 +22,7 @@ fun IntroScreen(
     navHostController: NavHostController,
 ) {
     val context = LocalContext.current as MainActivity
-    Image(
-        painter = painterResource(id = R.drawable.img),
-        contentDescription = "Image",
-        contentScale = ContentScale.FillBounds,
-        modifier = Modifier
-            .fillMaxSize()
-            .blur(20.dp),
-    )
+    BlurImage()
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -43,7 +37,7 @@ fun IntroScreen(
             }
         }
         GradientButton(text = "Settings") {
-
+            navHostController.navigate(Screen.SettingsScreen.route)
         }
         GradientButton(text = "Quit Game") {
             context.finish()

@@ -20,10 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sdk.dicegame.R
-import com.sdk.dicegame.component.DiceImage
-import com.sdk.dicegame.component.FinishDialog
-import com.sdk.dicegame.component.MenuDialog
-import com.sdk.dicegame.component.PlayButton
+import com.sdk.dicegame.component.*
 
 @Composable
 fun GameScreen() {
@@ -35,12 +32,7 @@ fun GameScreen() {
         mutableStateOf(false)
     }
 
-    Image(
-        painter = painterResource(id = R.drawable.img),
-        contentDescription = "",
-        modifier = Modifier.fillMaxSize(),
-        contentScale = ContentScale.FillBounds
-    )
+    BackgroundImage()
 
     Column(
         modifier = Modifier

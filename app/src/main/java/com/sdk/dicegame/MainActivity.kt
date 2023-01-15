@@ -14,6 +14,7 @@ import com.sdk.dicegame.presentation.game.GameScreen
 import com.sdk.dicegame.presentation.intro_page.IntroScreen
 import com.sdk.dicegame.presentation.intro_page.SplashScreen
 import com.sdk.dicegame.presentation.screen.Screen
+import com.sdk.dicegame.presentation.settings.SettingScreen
 import com.sdk.dicegame.ui.theme.DiceGameTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -35,6 +36,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Screen.StartScreen.route) {
                             IntroScreen(navHostController = navHostController)
+                        }
+                        composable(route = Screen.SettingsScreen.route) {
+                            SettingScreen(navHostController = navHostController)
                         }
                         composable(route = Screen.HomeScreen.route) {
                             GameScreen()

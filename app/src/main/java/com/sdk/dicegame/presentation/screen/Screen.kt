@@ -10,4 +10,7 @@ sealed class Screen(val route: String) {
     object HomeScreen: Screen(
         route = "Game"
     )
+    object SettingsScreen: Screen(
+        route = "Settings"
+    )
 }
