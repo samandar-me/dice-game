@@ -30,11 +30,7 @@ fun IntroScreen(
     ) {
         Spacer(modifier = Modifier.height(20.dp))
         GradientButton(text = "Start") {
-            navHostController.navigate(Screen.HomeScreen.route) {
-                popUpTo(Screen.StartScreen.route) {
-                    inclusive = true
-                }
-            }
+            navHostController.navigate(Screen.HomeScreen.route)
         }
         GradientButton(text = "Settings") {
             navHostController.navigate(Screen.SettingsScreen.route)

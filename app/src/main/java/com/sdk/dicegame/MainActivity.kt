@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                             SettingScreen(navHostController = navHostController)
                         }
                         composable(route = Screen.HomeScreen.route) {
-                            GameScreen()
+                            GameScreen(navHostController = navHostController)
                         }
                     }
                 }

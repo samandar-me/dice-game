@@ -1,9 +1,12 @@
 package com.sdk.dicegame.di
 
+import android.content.Context
 import com.sdk.dicegame.R
+import com.sdk.dicegame.manager.DataStoreManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -21,5 +24,12 @@ object AppModule {
             R.drawable.dice5,
             R.drawable.dice6
         )
+    }
+    @Provides
+    @Singleton
+    fun provideDataStoreManager(
+        @ApplicationContext context: Context
+    ): DataStoreManager {
+        return DataStoreManager(context)
     }
 }

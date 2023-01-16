@@ -16,9 +16,9 @@ import com.sdk.dicegame.MainActivity
 fun MenuDialog(
     modifier: Modifier = Modifier,
     isDialogOpen: Boolean,
+    onQuitClicked:() -> Unit,
     onResumeClick: () -> Unit
 ) {
-    val context = LocalContext.current as MainActivity
     AnimatedVisibility(
         visible = isDialogOpen,
         enter = fadeIn(animationSpec = tween(300)),
@@ -34,7 +34,7 @@ fun MenuDialog(
                 onResumeClick()
             }
             GradientButton(text = "Quit Game") {
-                context.finish()
+                onQuitClicked()
             }
             Spacer(modifier = Modifier.height(20.dp))
         }

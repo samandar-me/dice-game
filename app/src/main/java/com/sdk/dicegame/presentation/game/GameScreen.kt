@@ -1,29 +1,27 @@
 package com.sdk.dicegame.presentation.game
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.sdk.dicegame.R
 import com.sdk.dicegame.component.*
 
 @Composable
-fun GameScreen() {
+fun GameScreen(
+    navHostController: NavHostController
+) {
     val viewModel: GameViewModel = hiltViewModel()
     val state = viewModel.gameState.collectAsState().value
     val rotateAnimation = viewModel.rotateAnimation.collectAsState().value
@@ -98,7 +96,13 @@ fun GameScreen() {
     ) {
         viewModel.onEvent(GameEvent.OkButtonClicked)
     }
-    MenuDialog(isDialogOpen = isDialogOpen) {
-        isDialogOpen = false
-    }
+    MenuDialog(
+        isDialogOpen = isDialogOpen,
+        onResumeClick = {
+            isDialogOpen = false
+        },
+        onQuitClicked = {
+            navHostController.popBackStack()
+        }
+    )
 }
