@@ -7,10 +7,13 @@ sealed class Screen(val route: String) {
     object StartScreen: Screen(
         route = "Start"
     )
-    object HomeScreen: Screen(
+    object GameScreen: Screen(
         route = "Game"
     )
     object SettingsScreen: Screen(
         route = "Settings"
+    )
+    object ComputerScreen: Screen(
+        route = "Computer"
     )
 }

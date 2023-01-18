@@ -1,6 +1,5 @@
-package com.sdk.dicegame.presentation.game
+package com.sdk.dicegame.presentation.computer
 
-import android.media.MediaPlayer
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,21 +17,23 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.sdk.dicegame.R
 import com.sdk.dicegame.component.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
-fun GameScreen(
+fun ComputerScreen(
     navHostController: NavHostController,
     startSound: () -> Unit
 ) {
-    val viewModel: GameViewModel = hiltViewModel()
+    val viewModel: ComputerViewModel = hiltViewModel()
     val state = viewModel.gameState.collectAsState().value
     val rotateAnimation = viewModel.rotateAnimation.collectAsState().value
     val isGameFinished = viewModel.isGameFinished.collectAsState().value
     var isDialogOpen by remember {
         mutableStateOf(false)
     }
+    val coroutineScope = rememberCoroutineScope()
     BackgroundImage()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +47,7 @@ fun GameScreen(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = state.player1Score.toString(), color = Color.White, fontSize = 22.sp)
+            Text(text = state.playerScore.toString(), color = Color.White, fontSize = 22.sp)
             IconButton(onClick = {
                 isDialogOpen = true
             }) {
@@ -56,7 +57,7 @@ fun GameScreen(
                     tint = Color.White
                 )
             }
-            Text(text = state.player2Score.toString(), color = Color.White, fontSize = 22.sp)
+            Text(text = state.computerScore.toString(), color = Color.White, fontSize = 22.sp)
         }
         Row(
             modifier = Modifier
@@ -66,25 +67,27 @@ fun GameScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             PlayButton(
-                text = "Player 1",
+                text = "\tYou\t\t",
                 color = Color.Magenta,
                 isEnabled = state.isButton1Enabled,
                 onClick = {
-                    startSound()
-                    viewModel.onEvent(GameEvent.Player1Clicked)
+                    coroutineScope.launch {
+                        startSound()
+                        viewModel.onEvent(ComputerEvent.PlayerClicked)
+                        delay(1200L)
+                        startSound()
+                        viewModel.onEvent(ComputerEvent.ComputerClicked)
+                    }
                 }
             )
             DiceImage(image = state.im1, modifier = Modifier.rotate(rotateAnimation))
             Text(text = state.currentScore.toString(), fontSize = 30.sp, color = Color.White)
             DiceImage(image = state.im2, modifier = Modifier.rotate(rotateAnimation))
             PlayButton(
-                text = "Player 2",
+                text = "Computer",
                 color = Color.Blue,
                 isEnabled = state.isButton2Enabled,
-                onClick = {
-                    startSound()
-                    viewModel.onEvent(GameEvent.Player2Clicked)
-                }
+                onClick = {}
             )
         }
         Spacer(
@@ -95,9 +98,9 @@ fun GameScreen(
     }
     FinishDialog(
         isDialogOpen = isGameFinished,
-        text = if (state.player1Score > state.player2Score) "Player 1" else "Player 2"
+        text = if (state.playerScore > state.computerScore) "You" else "Computer"
     ) {
-        viewModel.onEvent(GameEvent.OkButtonClicked)
+        viewModel.onEvent(ComputerEvent.OkButtonClicked)
     }
     MenuDialog(
         isDialogOpen = isDialogOpen,

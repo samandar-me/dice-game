@@ -1,5 +1,6 @@
-package com.sdk.dicegame.presentation.game
+package com.sdk.dicegame.presentation.computer
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sdk.dicegame.manager.DataStoreManager
@@ -12,13 +13,13 @@ import kotlinx.coroutines.flow.update
 import java.util.*
 import javax.inject.Inject
 
+
 @HiltViewModel
-class GameViewModel @Inject constructor(
-    private val imageList: List<Int>,
-    private val manager: DataStoreManager
+class ComputerViewModel @Inject constructor(
+    private val imageList: List<Int>
 ) : ViewModel() {
-    private val _gameState: MutableStateFlow<GameState> = MutableStateFlow(GameState())
-    val gameState: StateFlow<GameState> get() = _gameState
+    private val _gameState: MutableStateFlow<ComputerState> = MutableStateFlow(ComputerState())
+    val gameState: StateFlow<ComputerState> get() = _gameState
     private var _rotateAnimation: MutableStateFlow<Float> = MutableStateFlow(180f)
     val rotateAnimation: StateFlow<Float> get() = _rotateAnimation
     private var _isGameFinished: MutableStateFlow<Boolean> = MutableStateFlow(false)
@@ -27,69 +28,59 @@ class GameViewModel @Inject constructor(
     private val state: MutableStateFlow<State> = MutableStateFlow(State())
 
     @OptIn(DelicateCoroutinesApi::class)
-    val singleThread = newSingleThreadContext("ViewModel Single Thread")
+    val singleThread = newSingleThreadContext("Computer ViewModel Single Thread")
 
-    init {
-        viewModelScope.launch {
-            manager.getState().collect {
-                state.value = it
-                _gameState.value = _gameState.value.copy(
-                    isButton1Enabled = !state.value.firstStart,
-                    isButton2Enabled = state.value.firstStart
-                )
-            }
-        }
-    }
 
-    fun onEvent(event: GameEvent) {
-        startImageAnimation()
+    fun onEvent(event: ComputerEvent) {
         when (event) {
-            is GameEvent.Player1Clicked -> {
+            is ComputerEvent.PlayerClicked -> {
                 viewModelScope.launch {
+                    startImageAnimation()
                     val r1 = randomNumber()
                     val r2 = randomNumber()
                     val image1 = randomImage(r1)
                     val image2 = randomImage(r2)
                     _gameState.update {
-                        GameState(
-                            player1Score = it.player1Score + r1 + r2 + 2,
+                        ComputerState(
+                            playerScore = it.playerScore + r1 + r2 + 2,
                             im1 = image1,
                             im2 = image2,
                             currentScore = r1 + r2 + 2,
                             isButton1Enabled = false,
                             isButton2Enabled = true,
-                            player2Score = it.player2Score
+                            computerScore = it.computerScore
                         )
                     }
                     checkGameFinishing()
                 }
             }
-            is GameEvent.Player2Clicked -> {
-                viewModelScope.launch {
-                    val r1 = randomNumber()
-                    val r2 = randomNumber()
-                    val image1 = randomImage(r1)
-                    val image2 = randomImage(r2)
-                    _gameState.update {
-                        GameState(
-                            player2Score = it.player2Score + r1 + r2 + 2,
-                            im1 = image1,
-                            im2 = image2,
-                            currentScore = r1 + r2 + 2,
-                            isButton2Enabled = false,
-                            isButton1Enabled = true,
-                            player1Score = it.player1Score
-                        )
+            is ComputerEvent.ComputerClicked -> {
+                if (!_isGameFinished.value) {
+                    viewModelScope.launch {
+                        startImageAnimation()
+                        val r1 = randomNumber()
+                        val r2 = randomNumber()
+                        val image1 = randomImage(r1)
+                        val image2 = randomImage(r2)
+                        _gameState.update {
+                            ComputerState(
+                                computerScore = it.computerScore + r1 + r2 + 2,
+                                im1 = image1,
+                                im2 = image2,
+                                currentScore = r1 + r2 + 2,
+                                isButton2Enabled = false,
+                                isButton1Enabled = true,
+                                playerScore = it.playerScore
+                            )
+                        }
+                        checkGameFinishing()
                     }
-                    checkGameFinishing()
                 }
             }
-            is GameEvent.OkButtonClicked -> {
+            is ComputerEvent.OkButtonClicked -> {
+                startImageAnimation()
                 _gameState.update {
-                    GameState(
-                        isButton1Enabled = !state.value.firstStart,
-                        isButton2Enabled = state.value.firstStart
-                    )
+                    ComputerState()
                 }
                 _isGameFinished.value = false
             }
@@ -108,11 +99,11 @@ class GameViewModel @Inject constructor(
     }
 
     private suspend fun checkGameFinishing() {
-        val finishCount = if (state.value.finishCount) 100 else 50
         delay(700L)
+        val finishCount = if (state.value.finishCount) 100 else 50
         _isGameFinished.update {
-            _gameState.value.player1Score >= finishCount
-                    || _gameState.value.player2Score >= finishCount
+            _gameState.value.playerScore >= finishCount
+                    || _gameState.value.computerScore >= finishCount
         }
     }
 

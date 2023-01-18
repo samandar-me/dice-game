@@ -1,6 +1,7 @@
 package com.sdk.dicegame.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit
 fun FinishDialog(
     modifier: Modifier = Modifier,
     isDialogOpen: Boolean,
-    num: Int,
+    text: String,
     onOkClicked: () -> Unit,
 ) {
     val party = Party(
@@ -40,9 +41,13 @@ fun FinishDialog(
         position = Position.Relative(0.5, 0.3)
     )
     if (isDialogOpen) {
-        KonfettiView(parties = listOf(party), modifier = modifier.fillMaxSize())
+        if (text != "Computer") {
+            KonfettiView(parties = listOf(party), modifier = modifier.fillMaxSize())
+        }
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable(enabled = false) {},
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -55,12 +60,12 @@ fun FinishDialog(
             ) {
                 Column(
                     modifier = Modifier
-                    .padding(8.dp),
+                        .padding(8.dp),
                     verticalArrangement = Arrangement.SpaceEvenly,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Congratulations!\nPlayer $num won!",
+                        text = "${if (text != "Computer") "Congratulations!" else ":("}\n$text won!",
                         textAlign = TextAlign.Center,
                         color = Color.White,
                         fontSize = 18.sp

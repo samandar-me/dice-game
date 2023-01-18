@@ -3,11 +3,9 @@ package com.sdk.dicegame.presentation.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sdk.dicegame.manager.DataStoreManager
+import com.sdk.dicegame.manager.State
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,49 +22,61 @@ class SettingsViewModel @Inject constructor(
 
     private fun getAllSettingsState() {
         viewModelScope.launch {
-            manager.apply {
-                get(DataStoreManager.fs).collect { b ->
-                    _state.update {
-                        SettingsState(
-                            firstStart = b
-                        )
-                    }
-                    println("@@@ViewM$b")
+            manager.getState().collect { newState ->
+                _state.update {
+                    SettingsState(
+                        firstStart = newState.firstStart,
+                        playWith = newState.playWith,
+                        sound = newState.sound,
+                        finishCount = newState.finishCount
+                    )
                 }
-//                get(DataStoreManager.pw).collect {
-//                    _state.value = _state.value.copy(playWith = it)
-//                }
-//                get(DataStoreManager.sn).collect {
-//                    _state.value = _state.value.copy(sound = it)
-//                }
-//                get(DataStoreManager.fc).collect {
-//                    _state.value = _state.value.copy(finishCount = it)
-//                }
             }
         }
     }
 
-    fun onEvent(event: SettingsEvent) {
-        when (event) {
-            is SettingsEvent.OnFirstStart -> {
-                viewModelScope.launch {
-                    manager.save(DataStoreManager.fs, !event.boolean)
-                    println("@@@${!event.boolean}")
+    fun saveState(event: SettingsEvent) {
+        viewModelScope.launch {
+            when (event) {
+                is SettingsEvent.OnFirstStart -> {
+                    manager.saveState(
+                        State(
+                            firstStart = !_state.value.firstStart,
+                            playWith = _state.value.playWith,
+                            sound = _state.value.sound,
+                            finishCount = _state.value.finishCount,
+                        )
+                    )
                 }
-            }
-            is SettingsEvent.OnPlayWith -> {
-                viewModelScope.launch {
-                    manager.save(DataStoreManager.pw, !event.boolean)
+                is SettingsEvent.OnPlayWith -> {
+                    manager.saveState(
+                        State(
+                            firstStart = _state.value.firstStart,
+                            playWith = !_state.value.playWith,
+                            sound = _state.value.sound,
+                            finishCount = _state.value.finishCount,
+                        )
+                    )
                 }
-            }
-            is SettingsEvent.OnSound -> {
-                viewModelScope.launch {
-                    manager.save(DataStoreManager.sn, !event.boolean)
+                is SettingsEvent.OnSound -> {
+                    manager.saveState(
+                        State(
+                            firstStart = _state.value.firstStart,
+                            playWith = _state.value.playWith,
+                            sound = !_state.value.sound,
+                            finishCount = _state.value.finishCount,
+                        )
+                    )
                 }
-            }
-            is SettingsEvent.OnFinishCount -> {
-                viewModelScope.launch {
-                    manager.save(DataStoreManager.fc, !event.boolean)
+                is SettingsEvent.OnFinishCount -> {
+                    manager.saveState(
+                        State(
+                            firstStart = _state.value.firstStart,
+                            playWith = _state.value.playWith,
+                            sound = _state.value.sound,
+                            finishCount = !_state.value.finishCount,
+                        )
+                    )
                 }
             }
         }

@@ -8,6 +8,6 @@ data class GameState(
     var currentScore: Int = 0,
     var im1: Int = R.drawable.dice1,
     var im2: Int = R.drawable.dice1,
-    var isButton1Enabled: Boolean = true,
+    var isButton1Enabled: Boolean = false,
     var isButton2Enabled: Boolean = false
 )

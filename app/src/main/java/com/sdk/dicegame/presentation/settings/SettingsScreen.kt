@@ -8,7 +8,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,8 +28,6 @@ fun SettingScreen(
     val state = viewModel.state.collectAsState().value
     BlurImage()
 
-    println("@@@Sc${state.firstStart}")
-
     Row(
         modifier = Modifier.fillMaxSize(),
         horizontalArrangement = Arrangement.SpaceEvenly,
@@ -40,7 +39,7 @@ fun SettingScreen(
             secondIcon = R.drawable.baseline_looks_two_24,
             description = "First start",
             onClick = {
-                viewModel.onEvent(SettingsEvent.OnFirstStart(state.finishCount))
+                viewModel.saveState(SettingsEvent.OnFirstStart)
             }
         )
         SettingsIcon(
@@ -49,25 +48,25 @@ fun SettingScreen(
             secondIcon = R.drawable.bot,
             description = "Play with",
             onClick = {
-                viewModel.onEvent(SettingsEvent.OnPlayWith(state.playWith))
+                viewModel.saveState(SettingsEvent.OnPlayWith)
             }
         )
         SettingsIcon(
             isChecked = state.sound,
-            firstIcon = R.drawable.baseline_volume_up_24,
-            secondIcon = R.drawable.baseline_volume_off_24,
+            firstIcon = R.drawable.baseline_volume_off_24,
+            secondIcon = R.drawable.baseline_volume_up_24,
             description = "Sound",
             onClick = {
-                viewModel.onEvent(SettingsEvent.OnSound(state.sound))
+                viewModel.saveState(SettingsEvent.OnSound)
             }
         )
         SettingsIcon(
             isChecked = state.finishCount,
-            firstIcon = R.drawable.o_00,
-            secondIcon = R.drawable._00,
+            firstIcon = R.drawable.fifty,
+            secondIcon = R.drawable.hound,
             description = "Finish count",
             onClick = {
-                viewModel.onEvent(SettingsEvent.OnFinishCount(state.finishCount))
+                viewModel.saveState(SettingsEvent.OnFinishCount)
             }
         )
     }

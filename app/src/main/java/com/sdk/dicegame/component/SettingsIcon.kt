@@ -18,9 +18,9 @@ fun SettingsIcon(
     firstIcon: Int,
     secondIcon: Int,
     description: String,
-    onClick: (Boolean) -> Unit,
+    onClick: () -> Unit,
 ) {
-    IconToggleButton(checked = isChecked, onCheckedChange = { onClick(it) }) {
+    IconToggleButton(checked = isChecked, onCheckedChange = { onClick() }) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
